@@ -180,25 +180,34 @@ extern NSBundle *uYouPlusBundle();
     ];
     [sectionItems addObject:developers];
 
-    YTSettingsSectionItem *copySettings = [%c(YTSettingsSectionItem)
-        itemWithTitle:LOC(@"COPY_SETTINGS")
-        titleDescription:LOC(@"COPY_SETTINGS_DESC")
-        accessibilityIdentifier:nil
-        detailTextBlock:nil
-        selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
-            NSMutableString *settingsString = [NSMutableString string];
-            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-            NSDictionary *modifiedSettings = [userDefaults dictionaryRepresentation];
-            for (NSString *key in modifiedSettings) {
+YTSettingsSectionItem *copySettings = [%c(YTSettingsSectionItem)
+    itemWithTitle:LOC(@"COPY_SETTINGS")
+    titleDescription:LOC(@"COPY_SETTINGS_DESC")
+    accessibilityIdentifier:nil
+    detailTextBlock:nil
+    selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        NSMutableString *settingsString = [NSMutableString string];
+        NSArray *copyKeys = @[@"portraitFullscreen_enabled", @"slideToSeek_enabled", @"YTTapToSeek_enabled", @"doubleTapToSeek_disabled", @"snapToChapter_enabled", @"pinchToZoom_enabled", @"ytMiniPlayer_enabled", @"stockVolumeHUD_enabled", @"disablePullToFull_enabled", @"disableChapterSkip_enabled", @"alwaysShowRemainingTime_enabled", @"disableRemainingTime_enabled",
+                              @"enableShareButton_enabled", @"enableSaveToButton_enabled", @"hideYTMusicButton_enabled", @"hideAutoplaySwitch_enabled", @"hideCC_enabled", @"hideVideoTitle_enabled", @"disableCollapseButton_enabled", @"disableFullscreenButton_enabled", @"hideHUD_enabled", @"hidePaidPromotionCard_enabled", @"hideChannelWatermark_enabled", @"hideVideoPlayerShadowOverlayButtons_enabled", @"hidePreviousAndNextButton_enabled", @"redProgressBar_enabled", @"hideHoverCards_enabled", @"hideRightPanel_enabled", @"hideFullscreenActions_enabled", @"noSuggestedVideo_enabled", @"hideHeatwaves_enabled", @"hideDoubleTapToSeekOverlay_enabled", @"hideOverlayDarkBackground_enabled", @"disableAmbientMode_enabled", @"noVideosInFullscreen_enabled", @"noRelatedWatchNexts_enabled",
+                              @"hideBuySuperThanks_enabled", @"hideSubcriptions_enabled", @"disableResumeToShorts_enabled", @"shortsQualityPicker_enabled",
+                              @"redSubscribeButton_enabled", @"hideButtonContainers_enabled", @"hideConnectButton_enabled", @"hideShareButton_enabled", @"hideRemixButton_enabled", @"hideThanksButton_enabled", @"hideDownloadButton_enabled", @"hideClipButton_enabled", @"hideSaveToPlaylistButton_enabled", @"hideReportButton_enabled", @"hidePreviewCommentSection_enabled", @"hideCommentSection_enabled",
+                              @"disableAccountSection_enabled", @"disableAutoplaySection_enabled", @"disableTryNewFeaturesSection_enabled", @"disableVideoQualityPreferencesSection_enabled", @"disableNotificationsSection_enabled", @"disableManageAllHistorySection_enabled", @"disableYourDataInYouTubeSection_enabled", @"disablePrivacySection_enabled", @"disableLiveChatSection_enabled", @"hidePremiumPromos_enabled",
+                              @"hideHomeTab_enabled", @"lowContrastMode_enabled", @"fixLowContrastMode_enabled", @"disableModernButtons_enabled", @"disableRoundedHints_enabled", @"disableModernFlags_enabled", @"ytNoModernUI_enabled", @"enableVersionSpoofer_enabled",
+                              @"uYouAdBlockingWorkaroundLite_enabled", @"uYouAdBlockingWorkaround_enabled", @"uYouAdBlockingWorkaround_enabled", @"centerYouTubeLogo_enabled", @"hideYouTubeLogo_enabled", @"ytStartupAnimation_enabled", @"disableHints_enabled", @"stickNavigationBar_enabled", @"hideSponsorBlockButton_enabled", @"hideChipBar_enabled", @"hidePlayNextInQueue_enabled", @"hideCommunityPosts_enabled", @"hideChannelHeaderLinks_enabled", @"iPhoneLayout_enabled", @"bigYTMiniPlayer_enabled", @"reExplore_enabled", @"autoHideHomeBar_enabled", @"hideSubscriptionsNotificationBadge_enabled", @"fixCasting_enabled", @"flex_enabled"];
+                 /* uYou Keys */ @"",
+        for (NSString *key in copyKeys) {
+            if ([userDefaults objectForKey:key]) {
                 NSString *value = [userDefaults objectForKey:key];
                 [settingsString appendFormat:@"%@: %@\n", key, value];
             }
-            [[UIPasteboard generalPasteboard] setString:settingsString];
-            // Show a confirmation message or perform some other action here - @arichornlover
-            return YES;
         }
-    ];
-    [sectionItems addObject:copySettings];
+        [[UIPasteboard generalPasteboard] setString:settingsString];
+        // Show a confirmation message or perform some other action here
+        return YES;
+    }
+];
+[sectionItems addObject:copySettings];
 
     YTSettingsSectionItem *pasteSettings = [%c(YTSettingsSectionItem)
         itemWithTitle:LOC(@"PASTE_SETTINGS")
