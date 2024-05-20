@@ -217,21 +217,28 @@ YTSettingsSectionItem *copySettings = [%c(YTSettingsSectionItem)
         detailTextBlock:nil
         selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
             NSString *settingsString = [[UIPasteboard generalPasteboard] string];
-
             if (settingsString.length > 0) {
-                NSArray *lines = [settingsString componentsSeparatedByString:@"\n"];
-
-                for (NSString *line in lines) {
-                    NSArray *components = [line componentsSeparatedByString:@": "];
-                    if (components.count == 2) {
-                        NSString *key = components[0];
-                        NSString *value = components[1];
-                        [[NSUserDefaults standardUserDefaults] setObject:value forKey:key];
+                UIAlertController *confirmationAlert = [UIAlertController alertControllerWithTitle:LOC(@"Are you sure you want to paste the settings?") message:nil preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:LOC(@"Confirm") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    NSArray *lines = [settingsString componentsSeparatedByString:@"\n"];
+                    for (NSString *line in lines) {
+                        NSArray *components = [line componentsSeparatedByString:@": "];
+                        if (components.count == 2) {
+                            NSString *key = components[0];
+                            NSString *value = components[1];
+                            [[NSUserDefaults standardUserDefaults] setObject:value forKey:key];
+                        }
                     }
-                }
+                    [settingsViewController reloadData];
+                    SHOW_RELAUNCH_YT_SNACKBAR;
+                }];
+                UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:LOC(@"Cancel") style:UIAlertActionStyleCancel handler:nil];
+
+                [confirmationAlert addAction:confirmAction];
+                [confirmationAlert addAction:cancelAction];
+
+                [settingsViewController presentViewController:confirmationAlert animated:YES completion:nil];
             }
-            [settingsViewController reloadData];
-            SHOW_RELAUNCH_YT_SNACKBAR;
             return YES;
         }
     ];
